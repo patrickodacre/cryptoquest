@@ -9,6 +9,7 @@
   "author": "Patrick O'Dacre",
   "license": "ISC",
   "devDependencies": {
-    "@nomiclabs/buidler": "^1.4.5"
+    "@nomiclabs/buidler": "^1.4.5",
+    "@openzeppelin/contracts": "^3.1.0"
   }
 }
