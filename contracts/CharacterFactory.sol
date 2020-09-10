@@ -13,11 +13,18 @@ contract CharacterFactory is Ownable {
 
     uint8 constant maxCharacters = 2;
 
-    event NewCharacter(address indexed owner, uint id, string name, uint level);
+    event NewCharacter(
+        address indexed owner,
+        uint id,
+        string firstname,
+        string bio,
+        uint level
+    );
 
     struct Character {
         string firstname;
         string surname;
+        string bio;
         uint level;
         uint8 remainingxp;
     }
@@ -27,7 +34,7 @@ contract CharacterFactory is Ownable {
 
     Character[] public characters;
 
-    function createCharacter(string memory _name) public {
+    function createCharacter(string memory _name, string memory _bio) public {
 
         require(ownerCharacterCount[msg.sender] <= maxCharacters);
 
@@ -37,14 +44,14 @@ contract CharacterFactory is Ownable {
         uint level = 1;
         uint8 remainingxp = 250;
 
-        characters.push(Character(_name, surname, level, remainingxp));
+        characters.push(Character(_name, surname, _bio, level, remainingxp));
 
         uint id = (characters.length - uint(1));
 
         ownerCharacterCount[msg.sender] = ownerCharacterCount[msg.sender].add(1);
         characterToOwner[id] = msg.sender;
 
-        emit NewCharacter(msg.sender, id, _name, level);
+        emit NewCharacter(msg.sender, id, _name, _bio, level);
     }
 
     function getOwnerCharacters() public view returns(uint[] memory) {
