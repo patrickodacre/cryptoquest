@@ -22,7 +22,16 @@ contract ZoneFactory is Ownable {
         uint levelmax;
     }
 
+    struct ZoneMob {
+        string name;
+        string description;
+        uint level;
+    }
+
     Zone[] public zones;
+    ZoneMob[] public zoneMobs;
+
+    mapping(uint => uint) zoneMobCount;
 
     function createZone(string memory _name, string memory _description, uint _levelmin, uint _levelmax) public onlyOwner {
         zones.push(Zone(_name, _description, _levelmin, _levelmax));
@@ -30,13 +39,33 @@ contract ZoneFactory is Ownable {
         emit NewZone(msg.sender, zones.length -1, _name, _description, _levelmin, _levelmax);
     }
 
-    function getZones() public view returns (uint[] memory) {
-        uint[] memory result = new uint[](zones.length);
+    function getZoneCount() public view returns (uint) {
+        return zones.length;
+    }
 
-        for (uint i = 0; i < zones.length; i++) {
-            result[i] = i;
+    function createZoneMob(string memory name, string memory description, uint levelmin, uint levelmax) public returns (uint) {
+
+        uint rand = uint(keccak256(abi.encodePacked(now, block.difficulty, msg.sender))) % (levelmax - levelmin);
+        rand = levelmin + rand;
+
+        zoneMobs.push(ZoneMob(name, description, rand));
+
+        return zoneMobs.length - 1;
+    }
+
+    function getZoneMobCount() public view returns (uint zoneMobCount) {
+        return zoneMobs.length;
+    }
+
+    function zoneIn(uint zoneAdd) public view returns (uint[] memory) {
+        console.log("testing");
+
+        uint[] memory result = new uint[](zoneMobCount[zoneAdd]);
+
+        for (uint i = 0; i < zoneMobCount[zoneAdd]; i++) {
+
+            /* if (zoneMobs[i]) */
+
         }
-
-        return result;
     }
 }

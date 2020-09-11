@@ -9,10 +9,12 @@ const {
 } = require('@openzeppelin/test-helpers')
 
 const ZF = artifacts.require("ZoneFactory")
+const MF = artifacts.require("MobFactory")
 
 describe("Zone Factory Contract", () => {
     let accounts
-    let c
+    let contract
+    let mobFactory
     let sender, receiver
 
     beforeEach(async () => {
@@ -20,13 +22,14 @@ describe("Zone Factory Contract", () => {
         sender = accounts[0]
         receiver = accounts[1]
 
-        c = await ZF.new()
+        contract = await ZF.new()
+        mobFactory = await MF.new()
     })
 
     describe("createZone", () => {
         it("should emit a NewZone event after creating a new zone", async () => {
 
-            const res = await c.createZone("Butcherblock Mountains", "Home of the dwarves.", 1, 5)
+            const res = await contract.createZone("Butcherblock Mountains", "Home of the dwarves.", 1, 5)
 
             expectEvent(res, "NewZone", {
                 creator : sender,
@@ -39,25 +42,60 @@ describe("Zone Factory Contract", () => {
         })
 
         it("should prevent non-owners from creating a new zone", async() => {
-            await expectRevert(c.createZone("thing", "thing", 1, 5, {from: accounts[3]}), "Ownable: caller is not the owner")
+            await expectRevert(contract.createZone("thing", "thing", 1, 5, {from: accounts[3]}), "Ownable: caller is not the owner")
         })
 
         it("should add new zone to zones array", async () => {
-            const res = await c.createZone("Butcherblock Mountains", "Home of the dwarves.", 1, 5)
+            const res = await contract.createZone("Butcherblock Mountains", "Home of the dwarves.", 1, 5)
 
-            const zone = await c.zones(0)
+            const zone = await contract.zones(0)
 
             assert.equal(zone.name, "Butcherblock Mountains")
 
         })
     })
 
+    describe("createZoneMob", () => {
+        it("should create a zone mob", async () => {
+            const receipt = await contract.createZoneMob("orc", "something bad", 1, 10)
+
+
+            const length = await contract.getZoneMobCount()
+
+            const mob = await contract.zoneMobs(length - 1)
+
+            assert.equal(mob.name, "orc")
+            assert.equal(mob.description, "something bad")
+        })
+
+        it("should return a mob at level between min and max", async () => {
+            const receipt = await contract.createZoneMob("orc", "something bad", 1, 10)
+
+
+            const length = await contract.getZoneMobCount()
+
+            const mob = await contract.zoneMobs(length - 1)
+
+            assert.equal(mob.level <= 10, true)
+            assert.equal(mob.level >= 1, true)
+        })
+    })
+
     describe("getZones", () => {
         it("should return all zones", async () => {
-            const ids = await c.getZones()
+            await contract.createZone("ZoneName", "This zone is great.", 1, 10)
+            await contract.createZone("ZoneName", "This zone is great.", 1, 10)
+            await contract.createZone("ZoneName", "This zone is great.", 1, 10)
 
-            for (var i = 0; i < ids.length; i++) {
-                assert.equal(i, ids[i])
+            const numOfZones = await contract.getZoneCount()
+
+            for (var i = 0; i < numOfZones; i++) {
+                const zone = await contract.zones(i)
+
+                assert.equal(zone.name, "ZoneName")
+                assert.equal(zone.description, "This zone is great.")
+                assert.equal(zone.levelmin, 1)
+                assert.equal(zone.levelmax, 10)
             }
         })
     })
