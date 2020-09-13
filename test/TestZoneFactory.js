@@ -22,8 +22,8 @@ describe("Zone Factory Contract", () => {
         sender = accounts[0]
         receiver = accounts[1]
 
-        contract = await ZF.new()
         mobFactory = await MF.new()
+        contract = await ZF.new(mobFactory.address)
     })
 
     describe("createZone", () => {
@@ -57,7 +57,8 @@ describe("Zone Factory Contract", () => {
 
     describe("createZoneMob", () => {
         it("should create a zone mob", async () => {
-            const receipt = await contract.createZoneMob("orc", "something bad", 1, 10)
+            await mobFactory.createMob("orc", "uh oh")
+            const receipt = await contract.createZoneMob(1, 10)
 
 
             const length = await contract.getZoneMobCount()
@@ -65,11 +66,12 @@ describe("Zone Factory Contract", () => {
             const mob = await contract.zoneMobs(length - 1)
 
             assert.equal(mob.name, "orc")
-            assert.equal(mob.description, "something bad")
+            assert.equal(mob.description, "uh oh")
         })
 
         it("should return a mob at level between min and max", async () => {
-            const receipt = await contract.createZoneMob("orc", "something bad", 1, 10)
+            await mobFactory.createMob("orc", "uh oh")
+            const receipt = await contract.createZoneMob(1, 10)
 
 
             const length = await contract.getZoneMobCount()

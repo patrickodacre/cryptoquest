@@ -3,6 +3,7 @@ pragma solidity ^0.6.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@nomiclabs/buidler/console.sol";
+import "./MobFactory.sol";
 
 contract ZoneFactory is Ownable {
 
@@ -33,6 +34,12 @@ contract ZoneFactory is Ownable {
 
     mapping(uint => uint) zoneMobCount;
 
+    MobFactory internal mobFactory;
+
+    constructor(address mobFactoryAddress) public {
+        mobFactory = MobFactory(mobFactoryAddress);
+    }
+
     function createZone(string memory _name, string memory _description, uint _levelmin, uint _levelmax) public onlyOwner {
         zones.push(Zone(_name, _description, _levelmin, _levelmax));
 
@@ -43,8 +50,11 @@ contract ZoneFactory is Ownable {
         return zones.length;
     }
 
-    function createZoneMob(string memory name, string memory description, uint levelmin, uint levelmax) public returns (uint) {
+    function createZoneMob(uint levelmin, uint levelmax) public returns (uint) {
 
+        (string memory name, string memory description) = mobFactory.getRandomMob();
+
+        // effectively get a number between some MIN and MAX
         uint rand = uint(keccak256(abi.encodePacked(now, block.difficulty, msg.sender))) % (levelmax - levelmin);
         rand = levelmin + rand;
 

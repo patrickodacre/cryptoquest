@@ -33,4 +33,18 @@ contract MobFactory is Ownable {
     function getMobCount() public view returns (uint) {
         return mobs.length;
     }
+
+    function getRandomMob() public view returns (string memory name, string memory description) {
+
+        require(mobs.length != 0);
+
+        if (mobs.length == 0 || mobs.length == 1) {
+            return (mobs[0].name, mobs[0].description);
+        } else {
+            uint randomI = uint(keccak256(abi.encodePacked(now, block.difficulty, msg.sender))) % mobs.length.sub(1);
+
+            return (mobs[randomI].name, mobs[randomI].description);
+        }
+    }
+
 }
