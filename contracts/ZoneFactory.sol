@@ -53,7 +53,7 @@ contract ZoneFactory is Ownable {
         return zoneMobs.length - 1;
     }
 
-    function getZoneMobCount() public view returns (uint zoneMobCount) {
+    function getZoneMobCount() public view returns (uint) {
         return zoneMobs.length;
     }
 
