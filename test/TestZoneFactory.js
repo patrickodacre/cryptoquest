@@ -92,4 +92,34 @@ describe("Zone Factory Contract", () => {
             }
         })
     })
+
+    describe("getZoneMobs", () => {
+        it("should return all mobs in the zone", async () => {
+            await contract.createZone("ZoneOne", "This zone is great.", 1, 10)
+            const zoneOne = await contract.getZoneCount() - 1;
+
+            await contract.createZone("ZoneTwo", "This zone is great.", 1, 10)
+            const zoneTwo = await contract.getZoneCount() - 1;
+
+            await mobFactory.createMob("orc", "uh oh")
+            await mobFactory.createMob("orc", "uh oh")
+            await mobFactory.createMob("orc", "uh oh")
+
+            await contract.createZoneMob(zoneOne, 0, 1, 10)
+            await contract.createZoneMob(zoneOne, 1, 1, 10)
+            await contract.createZoneMob(zoneOne, 2, 1, 10)
+
+            const numOfZoneMobs = await contract.getZoneMobCount(zoneOne)
+
+
+            for (let zoneMobID = 0; zoneMobID < numOfZoneMobs; zoneMobID++) {
+                const zoneMob = await contract.getZoneMob(zoneOne, zoneMobID)
+                assert.equal(zoneMob.name, "orc")
+            }
+
+            const zoneTwoMobCount = await contract.getZoneMobCount(zoneTwo)
+
+            assert.equal(zoneTwoMobCount, 0)
+        })
+    })
 })
