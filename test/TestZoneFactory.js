@@ -57,29 +57,19 @@ describe("Zone Factory Contract", () => {
 
     describe("createZoneMob", () => {
         it("should create a zone mob", async () => {
+            await contract.createZone("ZoneName", "This zone is great.", 1, 10)
             await mobFactory.createMob("orc", "uh oh")
-            const receipt = await contract.createZoneMob(1, 10)
 
+            const zoneID = await contract.getZoneCount() - 1;
 
-            const length = await contract.getZoneMobCount()
+            const receipt = await contract.createZoneMob(zoneID, 1, 10)
+            const length = await contract.getZoneMobCount(zoneID)
 
-            const mob = await contract.zoneMobs(length - 1)
+            const mob = await contract.getZoneMob(zoneID, length -1)
 
             assert.equal(mob.name, "orc")
             assert.equal(mob.description, "uh oh")
-        })
-
-        it("should return a mob at level between min and max", async () => {
-            await mobFactory.createMob("orc", "uh oh")
-            const receipt = await contract.createZoneMob(1, 10)
-
-
-            const length = await contract.getZoneMobCount()
-
-            const mob = await contract.zoneMobs(length - 1)
-
-            assert.equal(mob.level <= 10, true)
-            assert.equal(mob.level >= 1, true)
+            assert.equal(mob.level >= 1 && mob.level <= 10, true)
         })
     })
 

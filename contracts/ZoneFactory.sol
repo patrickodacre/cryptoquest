@@ -30,9 +30,9 @@ contract ZoneFactory is Ownable {
     }
 
     Zone[] public zones;
-    ZoneMob[] public zoneMobs;
 
     mapping(uint => uint) zoneMobCount;
+    mapping(uint => ZoneMob[]) zoneMobs;
 
     MobFactory internal mobFactory;
 
@@ -50,7 +50,7 @@ contract ZoneFactory is Ownable {
         return zones.length;
     }
 
-    function createZoneMob(uint levelmin, uint levelmax) public returns (uint) {
+    function createZoneMob(uint zoneID, uint levelmin, uint levelmax) public returns (uint) {
 
         (string memory name, string memory description) = mobFactory.getRandomMob();
 
@@ -58,13 +58,26 @@ contract ZoneFactory is Ownable {
         uint rand = uint(keccak256(abi.encodePacked(now, block.difficulty, msg.sender))) % (levelmax - levelmin);
         rand = levelmin + rand;
 
-        zoneMobs.push(ZoneMob(name, description, rand));
+        zoneMobs[zoneID].push(ZoneMob(name, description, rand));
 
-        return zoneMobs.length - 1;
+        return zoneMobs[zoneID].length -1;
     }
 
-    function getZoneMobCount() public view returns (uint) {
-        return zoneMobs.length;
+    function getZoneMobCount(uint zoneID) public view returns (uint) {
+        return zoneMobs[zoneID].length;
+    }
+
+    function getZoneMob(
+            uint zoneID,
+            uint mobID)
+        public view returns (
+            string memory name,
+            string memory description,
+            uint level)
+    {
+        ZoneMob memory mob = zoneMobs[zoneID][mobID];
+
+        return (mob.name, mob.description, mob.level);
     }
 
     function zoneIn(uint zoneAdd) public view returns (uint[] memory) {
