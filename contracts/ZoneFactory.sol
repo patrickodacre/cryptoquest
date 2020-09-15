@@ -50,9 +50,9 @@ contract ZoneFactory is Ownable {
         return zones.length;
     }
 
-    function createZoneMob(uint zoneID, uint levelmin, uint levelmax) public returns (uint) {
+    function createZoneMob(uint zoneID, uint templateMobID, uint levelmin, uint levelmax) public returns (uint) {
 
-        (string memory name, string memory description) = mobFactory.getRandomMob();
+        (string memory name, string memory description) = mobFactory.getMob(templateMobID);
 
         // effectively get a number between some MIN and MAX
         uint rand = uint(keccak256(abi.encodePacked(now, block.difficulty, msg.sender))) % (levelmax - levelmin);

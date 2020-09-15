@@ -34,6 +34,14 @@ contract MobFactory is Ownable {
         return mobs.length;
     }
 
+    function getMob(uint mobID) public view returns (string memory name, string memory description) {
+        require(mobs.length != 0);
+
+        Mob memory mob = mobs[mobID];
+
+        return (mob.name, mob.description);
+    }
+
     function getRandomMob() public view returns (string memory name, string memory description) {
 
         require(mobs.length != 0);

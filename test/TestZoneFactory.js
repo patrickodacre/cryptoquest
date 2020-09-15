@@ -61,8 +61,9 @@ describe("Zone Factory Contract", () => {
             await mobFactory.createMob("orc", "uh oh")
 
             const zoneID = await contract.getZoneCount() - 1;
+            const mobID = await mobFactory.getMobCount() - 1;
 
-            const receipt = await contract.createZoneMob(zoneID, 1, 10)
+            const receipt = await contract.createZoneMob(zoneID, mobID, 1, 10)
             const length = await contract.getZoneMobCount(zoneID)
 
             const mob = await contract.getZoneMob(zoneID, length -1)
