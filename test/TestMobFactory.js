@@ -32,4 +32,21 @@ describe("Mob Factory", () => {
         })
     })
 
+    describe("getMobs", () => {
+        it("should return all available mobs", async () => {
+            await contract.createMob("Orc", "A terrible orc.")
+            await contract.createMob("Orc", "A terrible orc.")
+            await contract.createMob("Orc", "A terrible orc.")
+
+            const numOfMobs = await contract.getMobCount()
+
+            for (var i = 0; i < numOfMobs; i++) {
+                const mob = await contract.mobs(i)
+
+                assert.equal(mob.name, "Orc")
+                assert.equal(mob.description, "A terrible orc.")
+            }
+        })
+    })
+
 })
