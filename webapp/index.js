@@ -1,5 +1,6 @@
 import start from './src/start'
 import admin from './src/admin'
+import zone from './src/zone'
 import home from './src/home'
 import storage from './src/storage'
 import styles from './src/styles/index.scss'
@@ -7,6 +8,7 @@ import styles from './src/styles/index.scss'
 const modules = {
     admin: (...things) => admin(...things),
     home: (...things) => home(...things),
+    zone: (...things) => zone(...things),
 }
 
 window.addEventListener('load', () => {

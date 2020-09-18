@@ -1,9 +1,72 @@
 {{define "content"}}
-    <div dapp-module="admin">
-        
-    </div>
+    <div dapp-module="admin"></div>
 
-    This is the content
+    <!-- zones -->
+    <section class="update-news-section">
+        <div class="container">
+            <div class="row">
+                <!-- left column -->
+                <div class="col-lg-8">
+                    <div class="hardware-guides">
+                        <div class="section-title">
+                            <h5><span>Manage Zones</span></h5>
+                        </div>
+                        <div data-zone-list></div>
+                    </div>
+                </div>
+                <!-- create zone form -->
+                <div class="col-lg-4">
+                    <div class="sidebar-option">
+                        <div id="createZoneForm" class="social-media">
+                            <div class="section-title">
+                                <h5>Create a Zone</h5>
+                            </div>
+                            <ul>
+                                <li>
+                                    <div class="sm-icon">Name</div>
+                                    <div class="inputWrapper">
+                                        <input
+                                            data-zone-name
+                                            name="" type="text" value=""/>
+                                    </div>
+                                </li>
+
+                                <li>
+                                    <div class="sm-icon">Description</div>
+                                    <div style="inputWrapper">
+                                        <input
+                                            data-zone-description
+                                            name="" type="text" value=""/>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="sm-icon">Min</div>
+                                    <div class="inputWrapper">
+                                        <input
+                                            data-zone-min-level
+                                            name="" placeholder="Level" type="number" min="1" value=""/>
+                                    </div>
+                                </li>
+
+                                <li>
+                                    <div class="sm-icon">Max</div>
+                                    <div class="inputWrapper">
+                                        <input
+                                            data-zone-max-level
+                                            name="" placeholder="Level" type="number" min="1" value=""/>
+                                    </div>
+                                </li>
+                            </ul>
+                            <div class="createZoneForm__saveButton">
+                                <button data-create-zone class="btn primary-btn btn-sm">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- end create zone form -->
+            </div><!-- end row -->
+        </div><!-- end container -->
+    </section>
+    <!-- Update News Section End -->
 
 {{end}}
 {{define "scripts"}}
