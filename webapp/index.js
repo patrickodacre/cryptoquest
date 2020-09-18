@@ -1,10 +1,12 @@
 import start from './src/start'
 import admin from './src/admin'
+import home from './src/home'
 import storage from './src/storage'
 import styles from './src/styles/index.scss'
 
 const modules = {
     admin: (...things) => admin(...things),
+    home: (...things) => home(...things),
 }
 
 window.addEventListener('load', () => {

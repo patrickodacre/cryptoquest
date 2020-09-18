@@ -178,7 +178,7 @@ ol {
 	font-size: 14px;
 	padding: 17px 30px 16px;
 	color: #ffffff;
-	background: #c20000;
+  background: $color;
 	line-height: normal;
 	letter-spacing: 1px;
 	text-transform: uppercase;
@@ -192,8 +192,8 @@ ol {
 }
 
 .primary-btn.btn-normal:hover {
-	background: #c20000;
-	border-color: #c20000;
+    background: darken($color, 15%);
+    border-color: darken($color, 15%);
 }
 
 /* Preloder */
@@ -1680,11 +1680,11 @@ ol {
 }
 
 .sidebar-option .social-media ul li:hover {
-	border-color: #40c4ff;
+	  border-color: $color;
 }
 
 .sidebar-option .social-media ul li:hover .sm-icon {
-	background: #40c4ff;
+	  background: $color;
 }
 
 .sidebar-option .social-media ul li .sm-icon {

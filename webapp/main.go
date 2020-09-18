@@ -50,6 +50,11 @@ func main() {
 		tpls.ExecuteTemplate(w, "404.gohtml", nil)
 	})
 
+	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		tpls := template.Must(template.ParseFiles("./templates/home.gohtml", "./templates/layouts/base.gohtml"))
+
+		tpls.ExecuteTemplate(w, "base.gohtml", nil)
+	})
 	r.Get("/admin", func(w http.ResponseWriter, r *http.Request) {
 		tpls := template.Must(template.ParseFiles("./templates/admin.gohtml", "./templates/layouts/base.gohtml"))
 
