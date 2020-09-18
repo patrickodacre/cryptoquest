@@ -82,6 +82,8 @@ describe("Zone Factory Contract", () => {
 
             const numOfZones = await contract.getZoneCount()
 
+            assert.equal(numOfZones, 3)
+
             for (var i = 0; i < numOfZones; i++) {
                 const zone = await contract.zones(i)
 
