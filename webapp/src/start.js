@@ -16,10 +16,16 @@ export default async () => {
     const mobs = new web3js.eth.Contract(mobABI.abi, mobContractAddress);
 
     const accounts = await web3js.eth.getAccounts()
+    let userAccount = null
 
-    console.log(accounts)
+    if (accounts.length === 0) {
+        alert('Use a tool like Metamask to create an account.')
+    } else {
+        userAccount = accounts[0]
+    }
 
     return {
+        userAccount,
         zones,
         characters,
         mobs,
