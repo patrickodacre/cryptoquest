@@ -32,6 +32,7 @@
 /* Template default CSS
 /*----------------------------------------*/
 
+$color: #8d6440;
 html,
 body {
 	height: 100%;
@@ -633,19 +634,22 @@ ol {
 }
 
 .humberger-menu-wrapper .slicknav_nav li .dropdown li a:hover {
-	color: #e10000;
+    color: lighten($color, 25%);
+	// color: #e10000;
 }
 
 .humberger-menu-wrapper .slicknav_nav .slicknav_row:hover {
 	border-radius: 0;
 	background: transparent;
-	color: #e10000;
+  color: lighten($color, 25%);
+	// color: #e10000;
 }
 
 .humberger-menu-wrapper .slicknav_nav a:hover {
 	border-radius: 0;
 	background: transparent;
-	color: #e10000;
+  color: lighten($color, 25%);
+	// color: #e10000;
 }
 
 .humberger-menu-wrapper .slicknav_btn {
@@ -784,31 +788,32 @@ ol {
 	display: inline-block;
 }
 
+
 .nav-options {
-	background: #9e0303;
+	  background: $color;
 	padding: 10px 0;
 }
 
 .nav-options.humberger-change {
-	background: #310a0a;
+  background: darken($color, 25%);
 	-webkit-transition: all 0.3s;
 	-o-transition: all 0.3s;
 	transition: all 0.3s;
 }
 
 .nav-options.humberger-change .humberger-menu {
-	background: #4e0808;
+    background: darken($color, 15%);
 	-webkit-transition: all 0.3s;
 	-o-transition: all 0.3s;
 	transition: all 0.3s;
 }
 
 .nav-options.humberger-change .nav-menu ul li a {
-	background: #4e0808;
+    background: darken($color, 15%);
 }
 
 .nav-options.humberger-change .nav-search {
-	background: #4e0808;
+    background: darken($color, 15%);
 	-webkit-transition: all 0.3s;
 	-o-transition: all 0.3s;
 	transition: all 0.3s;
@@ -817,7 +822,8 @@ ol {
 .nav-options .humberger-menu {
 	font-size: 15px;
 	color: #ffffff;
-	background: #a81d1d;
+  background: darken($color, 25%);
+	// background: #a81d1d;
 	float: left;
 	padding: 15px 28px;
 	-webkit-transform: skewX(-15deg);
@@ -879,7 +885,7 @@ ol {
 	top: 6px;
 	height: 13px;
 	width: 7px;
-	background: #c20000;
+  background: darken($color, 25%);
 	content: "";
 	-webkit-transform: skewX(-15deg);
 	-ms-transform: skewX(-15deg);
@@ -915,6 +921,7 @@ ol {
 }
 
 .nav-options .nav-menu ul li .megamenu-wrapper .mw-nav li a:hover {
+
 	color: #c20000;
 	text-shadow: none;
 }
@@ -1023,11 +1030,13 @@ ol {
 }
 
 .nav-options .nav-menu ul li.active a {
-	background: #c20000;
+    background: darken($color, 10%);
+	// background: #c20000;
 }
 
 .nav-options .nav-menu ul li:hover>a {
-	background: #c20000;
+    background: darken($color, 25%);
+	// background: #c20000;
 	text-shadow: 1px 0px 0px #ffffff;
 }
 
@@ -1049,7 +1058,8 @@ ol {
 	text-transform: uppercase;
 	padding: 17px 15px 13px 30px;
 	display: inline-block;
-	background: #a81d1d;
+  background: darken($color, 5%);
+	// background: #a81d1d;
 	-webkit-transform: skewX(-15deg);
 	-ms-transform: skewX(-15deg);
 	transform: skewX(-15deg);
@@ -1076,7 +1086,8 @@ ol {
 	-webkit-transform: skewX(-15deg);
 	-ms-transform: skewX(-15deg);
 	transform: skewX(-15deg);
-	background: #a81d1d;
+  background: darken($color, 25%);
+	// background: #a81d1d;
 	padding: 15px 25px;
 	display: inline-block;
 	float: right;
