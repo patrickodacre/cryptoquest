@@ -3,29 +3,45 @@ package main
 import (
 	"html/template"
 	"net/http"
+
+	"github.com/go-chi/chi"
 )
 
 func main() {
+	r := chi.NewRouter()
+
 	http.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {})
 
 	// static files
-	fs := http.FileServer(http.Dir("../build/contracts"))
-	http.Handle("/abis/", http.StripPrefix("/abis/", fs))
+	contracts := http.FileServer(http.Dir("../build/contracts"))
+	r.Get("/abis/*", func(w http.ResponseWriter, r *http.Request) {
+		http.StripPrefix("/abis/", contracts).ServeHTTP(w, r)
+	})
 
 	images := http.FileServer(http.Dir("./src/img"))
-	http.Handle("/images/", http.StripPrefix("/images/", images))
+	r.Get("/images/*", func(w http.ResponseWriter, r *http.Request) {
+		http.StripPrefix("/images/", images).ServeHTTP(w, r)
+	})
 
 	js := http.FileServer(http.Dir("./src/js"))
-	http.Handle("/js/", http.StripPrefix("/js/", js))
+	r.Get("/js/*", func(w http.ResponseWriter, r *http.Request) {
+		http.StripPrefix("/js/", js).ServeHTTP(w, r)
+	})
 
 	css := http.FileServer(http.Dir("./src/styles"))
-	http.Handle("/css/", http.StripPrefix("/css/", css))
+	r.Get("/css/*", func(w http.ResponseWriter, r *http.Request) {
+		http.StripPrefix("/css/", css).ServeHTTP(w, r)
+	})
 
 	fonts := http.FileServer(http.Dir("./src/fonts"))
-	http.Handle("/fonts/", http.StripPrefix("/fonts/", fonts))
+	r.Get("/fonts/*", func(w http.ResponseWriter, r *http.Request) {
+		http.StripPrefix("/fonts/", fonts).ServeHTTP(w, r)
+	})
 
 	assets := http.FileServer(http.Dir("./public"))
-	http.Handle("/assets/", http.StripPrefix("/assets/", assets))
+	r.Get("/assets/*", func(w http.ResponseWriter, r *http.Request) {
+		http.StripPrefix("/assets/", assets).ServeHTTP(w, r)
+	})
 
 	// page routes
 	http.HandleFunc("/not-found", func(w http.ResponseWriter, r *http.Request) {
@@ -34,11 +50,11 @@ func main() {
 		tpls.ExecuteTemplate(w, "404.gohtml", nil)
 	})
 
-	http.HandleFunc("/admin", func(w http.ResponseWriter, r *http.Request) {
+	r.Get("/admin", func(w http.ResponseWriter, r *http.Request) {
 		tpls := template.Must(template.ParseFiles("./templates/admin.gohtml", "./templates/layouts/base.gohtml"))
 
 		tpls.ExecuteTemplate(w, "base.gohtml", nil)
 	})
 
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":8080", r)
 }
