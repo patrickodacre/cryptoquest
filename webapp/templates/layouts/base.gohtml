@@ -1,3 +1,6 @@
+{{define "header-scripts"}}{{end}}
+{{define "content"}}{{end}}
+{{define "scripts"}}{{end}}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -23,6 +26,10 @@
     <link rel="stylesheet" href="/css/magnific-popup.css" type="text/css">
     <link rel="stylesheet" href="/css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="/assets/bundle.css" type="text/css">
+    <script language="javascript" type="text/javascript" src="/assets/bundle.js"></script>
+
+    {{template "header-scripts" . }}
+
 </head>
 
 <body>
@@ -1193,6 +1200,8 @@
     </section>
     <!-- Update News Section End -->
 
+    {{template "content"}}
+    {{ template "content" . }}
     <!-- Videos Guide Section Begin -->
     <section class="video-guide-section">
         <div class="container">
@@ -2068,6 +2077,7 @@
     <script src="/js/jquery.slicknav.js"></script>
     <script src="/js/owl.carousel.min.js"></script>
     <script src="/js/main.js"></script>
+    {{template "scripts" . }}
 </body>
 
 <
