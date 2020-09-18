@@ -1,5 +1,6 @@
 import start from './src/start'
 import admin from './src/admin'
+import styles from './src/styles/index.scss'
 
 const modules = {
     admin: abis => admin(abis)

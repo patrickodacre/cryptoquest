@@ -12,8 +12,20 @@ func main() {
 	fs := http.FileServer(http.Dir("../build/contracts"))
 	http.Handle("/abis/", http.StripPrefix("/abis/", fs))
 
-	vue := http.FileServer(http.Dir("./public"))
-	http.Handle("/assets/", http.StripPrefix("/assets/", vue))
+	images := http.FileServer(http.Dir("./src/img"))
+	http.Handle("/images/", http.StripPrefix("/images/", images))
+
+	js := http.FileServer(http.Dir("./src/js"))
+	http.Handle("/js/", http.StripPrefix("/js/", js))
+
+	css := http.FileServer(http.Dir("./src/styles"))
+	http.Handle("/css/", http.StripPrefix("/css/", css))
+
+	fonts := http.FileServer(http.Dir("./src/fonts"))
+	http.Handle("/fonts/", http.StripPrefix("/fonts/", fonts))
+
+	assets := http.FileServer(http.Dir("./public"))
+	http.Handle("/assets/", http.StripPrefix("/assets/", assets))
 
 	// page routes
 	http.HandleFunc("/not-found", func(w http.ResponseWriter, r *http.Request) {
@@ -23,9 +35,9 @@ func main() {
 	})
 
 	http.HandleFunc("/admin", func(w http.ResponseWriter, r *http.Request) {
-		tpls := template.Must(template.ParseFiles("./templates/admin.gohtml", "./templates/layouts/main.gohtml"))
+		tpls := template.Must(template.ParseFiles("./templates/admin.gohtml", "./templates/layouts/base.gohtml"))
 
-		tpls.ExecuteTemplate(w, "main.gohtml", nil)
+		tpls.ExecuteTemplate(w, "base.gohtml", nil)
 	})
 
 	http.ListenAndServe(":8080", nil)
