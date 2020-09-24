@@ -19,9 +19,10 @@
                     <div class="sidebar-option">
                         <div id="createZoneForm" class="social-media">
                             <div class="section-title">
-                                <h5>Create a Zone</h5>
+                                <h5 data-zone-form-heading>Create a Zone</h5>
                             </div>
                             <ul>
+                                <input type="hidden" data-edit-zone-id></input>
                                 <li>
                                     <div class="sm-icon">Name</div>
                                     <div class="inputWrapper">
@@ -56,9 +57,11 @@
                                             name="" placeholder="Level" type="number" min="1" value=""/>
                                     </div>
                                 </li>
+                                <li><div data-form-messages></div></li>
                             </ul>
                             <div class="createZoneForm__saveButton">
-                                <button data-create-zone class="btn primary-btn btn-sm">Save</button>
+                                <button data-clear-zone class="btn primary-btn btn-sm">Clear</button>
+                                <button data-save-zone class="btn primary-btn btn-sm">Save</button>
                             </div>
                         </div>
                     </div>

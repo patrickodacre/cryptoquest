@@ -50,6 +50,21 @@ contract ZoneFactory is Ownable {
         return zones.length;
     }
 
+    function editZone(uint zoneID, string memory _name, string memory _description, uint _levelmin, uint _levelmax) public onlyOwner {
+        Zone storage z = zones[zoneID];
+
+        z.name = _name;
+        z.description = _description;
+
+        // we cannot edit min / max levels as the zone mobs
+        // associated with the zone could then be rendered out of range.
+        uint mobCount = getZoneMobCount(zoneID);
+        if (mobCount == 0) {
+            z.levelmin = _levelmin;
+            z.levelmax = _levelmax;
+        }
+    }
+
     function createZoneMob(uint zoneID, uint templateMobID, uint levelmin, uint levelmax) public returns (uint) {
 
         (string memory name, string memory description) = mobFactory.getMob(templateMobID);

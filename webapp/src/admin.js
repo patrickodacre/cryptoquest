@@ -2,18 +2,61 @@ export default ({characters, mobs, zones}, user) => {
 
     loadZones()
 
-    // create zone form:
-    {
-        const createZoneBtn = document.querySelector('[data-create-zone]')
+    let zoneData = {}
+    let selectedZone = null
 
-        createZoneBtn.addEventListener('click', evt => {
-            const name = document.querySelector('[data-zone-name]').value
-            const description = document.querySelector('[data-zone-description]').value
-            const minLevel = document.querySelector('[data-zone-min-level]').value
-            const maxLevel = document.querySelector('[data-zone-max-level]').value
+    const saveZoneBtn = document.querySelector('[data-save-zone]')
+    const clearZoneBtn = document.querySelector('[data-clear-zone]')
+    const heading = document.querySelector('[data-zone-form-heading]')
+    let isEditingZone = false
+
+    // listen for a clear form request:
+    {
+        clearZoneBtn.addEventListener('click', evt => {
+            isEditingZone = false
+            selectedZone = null
+            heading.innerHTML = "Create a Zone"
+
+            const {name,description,minLevel,maxLevel} = getFormFields()
+            // these would have been disabled when the edit is initialized
+            minLevel.removeAttribute('disabled')
+            maxLevel.removeAttribute('disabled')
+            name.value = ""
+            description.value = ""
+            minLevel.setAttribute('type', 'number')
+            maxLevel.setAttribute('type', 'number')
+            minLevel.value = null
+            maxLevel.value = null
+        })
+    }
+
+    // create / edit zone form:
+    {
+        saveZoneBtn.addEventListener('click', evt => {
+            const {name,description,minLevel,maxLevel} = getFormFields()
+
+            // edit
+            if (isEditingZone && selectedZone && typeof selectedZone.id !== "undefined") {
+
+                zones.methods
+                    .editZone(selectedZone.id, name.value, description.value, parseInt(minLevel.value), parseInt(maxLevel.value))
+                    .send({from: user.hash, gas: 6721975, gasPrice: "20000000000"})
+                    .on('receipt', function (resp) {
+                        // these would have been disabled when the edit is initialized
+                        minLevel.removeAttribute('disabled')
+                        maxLevel.removeAttribute('disabled')
+                        loadZones()
+                    })
+                    .on('error', function (err) {
+                        alert(err.message)
+                        debugger
+                    })
+
+                return
+            }
 
             zones.methods
-                .createZone(name, description, parseInt(minLevel), parseInt(maxLevel))
+                .createZone(name.value, description.value, parseInt(minLevel.value), parseInt(maxLevel.value))
                 .send({from: user.accountNumber(), gas: 6721975, gasPrice: "20000000000"})
                 .on('receipt', function (resp) {
                     loadZones()
@@ -23,6 +66,17 @@ export default ({characters, mobs, zones}, user) => {
                     debugger
                 })
         })
+    }
+
+    function getFormFields() {
+
+        const name = document.querySelector('[data-zone-name]')
+        const description = document.querySelector('[data-zone-description]')
+        const minLevel = document.querySelector('[data-zone-min-level]')
+        const maxLevel = document.querySelector('[data-zone-max-level]')
+        const message = document.querySelector('[data-form-messages]')
+
+        return {name, description, minLevel, maxLevel,message}
     }
 
     function getRandomThumbnail() {
@@ -60,13 +114,14 @@ export default ({characters, mobs, zones}, user) => {
                 let promises = []
 
                 for (let i = 0; i < count; i++) {
-                    promises.push(zones.methods.zones(i).call())
+                    promises.push(zones.methods.zones(i).call().then(resp => ({...resp, ...{id: i}})))
                 }
 
                 Promise.all(promises)
                     .then((results) => {
                         results.forEach(z => {
                             const image = getRandomThumbnail()
+                            zoneData[z.id] = z
 
                             const zone = `
                                 <div class="trending-item mb-3">
@@ -75,13 +130,70 @@ export default ({characters, mobs, zones}, user) => {
                                     </div>
                                     <div class="ti-text">
                                         <h6><a>${z.name}</a></h6>
-                                        <p>${z.description}</p>
+                                        <p>${z.description}
+                                            <br/>
+                                            <strong>Levels: ${z.levelmin} - ${z.levelmax}</strong>
+                                            <br/>
+                                            <button
+                                                class="btn btn-primary"
+                                                data-edit-zone
+                                                data-zone-id="${z.id}"
+                                            >Edit</button>
+                                        </p>
                                     </div>
                                 </div>
 
                                 `
                             zoneList.innerHTML += zone
                         })
+
+                        {
+                            const editZoneBtns = document.querySelectorAll('[data-edit-zone]')
+
+                            // listen for an edit request:
+                            editZoneBtns.forEach(btn => {
+                                btn.addEventListener('click', evt => {
+                                    isEditingZone = true
+
+                                    const zoneID = evt.currentTarget.getAttribute("data-zone-id")
+
+                                    zones.methods.getZoneMobCount(zoneID).call()
+                                        .then(mobCount => {
+ 
+                                            // update the heading
+                                            heading.innerHTML = "Editing Zone " + zoneID
+
+                                            // fill in the form
+                                            {
+                                                const z = zoneData[zoneID]
+                                                selectedZone = z
+
+                                                const {name,description,minLevel,maxLevel,message} = getFormFields()
+
+                                                name.value = z.name
+
+                                                description.value = z.description
+
+                                                if (mobCount == "0") {
+                                                    minLevel.value = z.levelmin
+                                                    maxLevel.value = z.levelmax
+                                                }
+                                                // if we have mobs in the zone, we cannot change the level
+                                                else {
+                                                    message.innerHTML = "Zone has mobs, so you cannot change the level range."
+                                                    minLevel.setAttribute('disabled', true)
+                                                    minLevel.setAttribute('type', 'text')
+                                                    minLevel.value = z.levelmin + " (cannot edit)"
+
+                                                    maxLevel.setAttribute('type', 'text')
+                                                    maxLevel.setAttribute('disabled', true)
+                                                    maxLevel.value = z.levelmax + " (cannot edit)"
+                                                }
+                                            }
+                                        })
+                                })
+                            })
+                        }
                     })
             })
 

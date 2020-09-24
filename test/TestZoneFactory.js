@@ -95,6 +95,40 @@ describe("Zone Factory Contract", () => {
         })
     })
 
+    describe("editZone", () => {
+        it("should update zone name, description, levelmin, and levelmax", async() => {
+            await contract.createZone("ZoneOne", "This zone is great.", 1, 10)
+
+            await contract.editZone(0, "ZoneOneEdited", "This zone is very great.", 2, 5)
+
+            const zone = await contract.zones(0)
+
+            assert.equal(zone.name, "ZoneOneEdited")
+            assert.equal(zone.description, "This zone is very great.")
+            assert.equal(zone.levelmin, 2)
+            assert.equal(zone.levelmax, 5)
+        })
+
+        it("should NOT update levelmin or levelmax when there are mobs in the zone", async() => {
+            await contract.createZone("ZoneOne", "This zone is great.", 1, 10)
+            const zoneID = 0
+
+            await mobFactory.createMob("orc", "uh oh")
+            await contract.createZoneMob(zoneID, 0, 1, 10)
+
+            // now that we have a mob in the zone, we should NOT see a change to the level range
+
+            await contract.editZone(zoneID, "ZoneOneEdited", "This zone is very great.", 2, 5)
+
+            const zone = await contract.zones(0)
+
+            assert.equal(zone.name, "ZoneOneEdited")
+            assert.equal(zone.description, "This zone is very great.")
+            assert.equal(zone.levelmin, 1)
+            assert.equal(zone.levelmax, 10)
+        })
+    })
+
     describe("getZoneMobs", () => {
         it("should return all mobs in the zone", async () => {
             await contract.createZone("ZoneOne", "This zone is great.", 1, 10)
@@ -112,7 +146,6 @@ describe("Zone Factory Contract", () => {
             await contract.createZoneMob(zoneOne, 2, 1, 10)
 
             const numOfZoneMobs = await contract.getZoneMobCount(zoneOne)
-
 
             for (let zoneMobID = 0; zoneMobID < numOfZoneMobs; zoneMobID++) {
                 const zoneMob = await contract.getZoneMob(zoneOne, zoneMobID)
