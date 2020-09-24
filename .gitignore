@@ -3,3 +3,4 @@ build
 artifacts
 cache
 webapp/public
+webapp/env.js
