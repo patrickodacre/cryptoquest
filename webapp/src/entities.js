@@ -1,8 +1,20 @@
 import media from "./media"
 
 export default {
+    zone,
     zoneMobs,
     mobTypes,
+}
+
+function zone(zones, zoneID) {
+    return zones.methods.zones(zoneID).call()
+        .then(zoneDetails => ({
+            id: parseInt(zoneID),
+            name: zoneDetails.name,
+            description: zoneDetails.description,
+            levelmin: parseInt(zoneDetails.levelmin),
+            levelmax: parseInt(zoneDetails.levelmax),
+        }))
 }
 
 function mobTypes(mobs) {
