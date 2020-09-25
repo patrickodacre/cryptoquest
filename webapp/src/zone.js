@@ -14,31 +14,26 @@ export default ({characters, mobs, zones}, user) => {
 
     // get the zone details FIRST.
     // These details are required for anything to work properly.
-    zones.methods.zones(zoneID).call().then(zoneDetails => {
+    entities.zone(zones, zoneID).then(zone => {
 
-        const zone = {
-            name: zoneDetails.name,
-            description: zoneDetails.description,
-            levelmin: parseInt(zoneDetails.levelmin),
-            levelmax: parseInt(zoneDetails.levelmax),
+        // update page info:
+        {
+            document.querySelector('[data-page-title]')
+                .innerHTML = `
+                    <div>
+                        <h1 class="page-title">Manage ${zone.name} - Levels ${zone.levelmin} - ${zone.levelmax}</h1>
+                    </div>
+                `
+
+            document.querySelector('[data-zone-description]')
+                .innerHTML = `
+                    <p>
+                        ${zone.description}
+                    </p>
+                `
         }
 
-        document.querySelector('[data-page-title]')
-            .innerHTML = `
-                <div>
-                    <h1 class="page-title">Manage ${zone.name} - Levels ${zone.levelmin} - ${zone.levelmax}</h1>
-                </div>
-            `
-
-        document.querySelector('[data-zone-description]')
-            .innerHTML = `
-                <p>
-                    ${zone.description}
-                </p>
-            `
-
-
-        // wire up save 
+        // wire up save
         {
             saveZoneMobBtn.addEventListener('click', evt => {
                 const {type} = getFormFields()
@@ -71,7 +66,7 @@ export default ({characters, mobs, zones}, user) => {
         // We'll need a list of zone mobs created.
         loadMobTypeOptions()
         loadZoneMobs()
-    }) // end get zone details
+    })
 
     function loadMobTypeOptions() {
 
