@@ -61,8 +61,6 @@ contract CharacterFactory is Ownable {
 
         require(ownerCharacterCount[msg.sender] <= maxCharacters);
 
-        /* console.log("This is a test!!", msg.sender); */
-
         string memory surname = "";
         uint level = 1;
         uint8 remainingxp = 250;
