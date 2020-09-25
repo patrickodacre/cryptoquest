@@ -77,5 +77,11 @@ func main() {
 		tpls.ExecuteTemplate(w, "base.gohtml", zoneID)
 	})
 
+	r.Get("/characters", func(w http.ResponseWriter, r *http.Request) {
+		tpls := template.Must(template.ParseFiles("./templates/characters.gohtml", "./templates/layouts/base.gohtml"))
+
+		tpls.ExecuteTemplate(w, "base.gohtml", nil)
+	})
+
 	http.ListenAndServe(":8080", r)
 }

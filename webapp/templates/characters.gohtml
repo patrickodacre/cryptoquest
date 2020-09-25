@@ -1,0 +1,63 @@
+{{define "content"}}
+    <div dapp-module="characters"></div>
+
+    <section class="update-news-section">
+        <div class="container">
+            <div class="mb-5">
+                <div data-page-title="" class="mb-3"></div>
+                <div data-page-description="" class="mb-3"></div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8">
+                    <div data-character-list></div>
+                </div>
+
+                <!-- create character form -->
+                <div class="col-lg-4">
+                    <div class="sidebar-option">
+                        <div id="createZoneForm" class="social-media">
+                            <div class="section-title">
+                                <h5 data-character-form-heading>Create a Character</h5>
+                            </div>
+
+                            <ul>
+                                <li>
+                                    <div class="sm-icon">First Name</div>
+                                    <div class="inputWrapper">
+                                        <input
+                                            data-character-firstname
+                                            name="" type="text" value=""/>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="sm-icon">Surname</div>
+                                    <div class="inputWrapper">
+                                        <input
+                                            data-character-surname
+                                            name="" type="text" value=""/>
+                                    </div>
+                                </li>
+
+                                <li>
+                                    <div class="sm-icon">Bio</div>
+                                    <div style="inputWrapper">
+                                        <input
+                                            data-character-bio
+                                            name="" type="text" value=""/>
+                                    </div>
+                                </li>
+                            </ul>
+
+                            <div data-character-form-messages></div>
+                            <div class="createZoneForm__saveButton">
+                                <button data-clear-character class="btn primary-btn btn-sm">Clear</button>
+                                <button data-save-character class="btn primary-btn btn-sm">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- end create character form -->
+
+            </div>
+        </div>
+    </section>
+{{end}}

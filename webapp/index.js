@@ -3,12 +3,14 @@ import admin from './src/admin'
 import zone from './src/zone'
 import adventureZone from './src/adventure-zone'
 import home from './src/home'
+import characters from './src/characters'
 import storage from './src/storage'
 import styles from './src/styles/index.scss'
 
 const modules = {
     admin: (...things) => admin(...things),
     home: (...things) => home(...things),
+    characters: (...things) => characters(...things),
     zone: (...things) => zone(...things),
     adventureZone: (...things) => adventureZone(...things),
 }

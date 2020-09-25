@@ -13,6 +13,7 @@ contract CharacterFactory is Ownable {
     using SafeMath for uint256;
 
     uint8 constant maxCharacters = 2;
+    uint constant minLevelForSurname = 20;
     uint randNonce = 0;
     uint attackVictoryProbability = 70;
 
@@ -24,6 +25,14 @@ contract CharacterFactory is Ownable {
         string firstname,
         string bio,
         uint level
+    );
+
+    event EditCharacter(
+        address indexed owner,
+        uint id,
+        string firstname,
+        string surname,
+        string bio
     );
 
     event CharacterWonBattle(address indexed owner, uint indexed characterID, uint8 experiencePoints, uint8 remainingxp);
@@ -66,6 +75,22 @@ contract CharacterFactory is Ownable {
         characterToOwner[id] = msg.sender;
 
         emit NewCharacter(msg.sender, id, _name, _bio, level);
+    }
+
+    function editCharacter(uint _id, string memory _firstname, string memory _surname, string memory _bio) public {
+
+        Character storage char = characters[_id];
+
+        require(characterToOwner[_id] == msg.sender);
+
+        if (char.level >= minLevelForSurname) {
+            char.surname = _surname;
+        }
+
+        char.firstname = _firstname;
+        char.bio = _bio;
+
+        emit EditCharacter(msg.sender, _id, _firstname, _surname, _bio);
     }
 
     function getOwnerCharacters() public view returns(uint[] memory) {
