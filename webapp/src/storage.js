@@ -15,13 +15,30 @@ export default () => {
 
 class UserAccount {
     constructor(hash) {
+        // defaults
         this.hash = hash
-        this.updateLastVisited()
+        this.last_visited = new Date()
+        this.selected_character = null
+
+        const cq = quest() || {}
+
+        // if we have a storage record for this account,
+        // we'll init the stored values
+        if (cq[this.hash]) {
+            this.selected_character = cq[this.hash].selected_character || null
+        }
+
         this.save()
     }
 
     accountNumber() {
         return this.hash
+    }
+
+    selectCharacter(character) {
+        this.selected_character = character
+
+        this.save('selected_character', this.selected_character)
     }
 
     updateLastVisited() {
