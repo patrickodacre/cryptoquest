@@ -1,0 +1,22 @@
+{{define "content"}}
+    <div dapp-module="adventureZone" data-zone-id="{{.}}"></div>
+
+    <section class="update-news-section">
+        <div class="container">
+            <div class="mb-5">
+                <div data-page-title="" class="mb-3"></div>
+                <div data-zone-description="" class="mb-3"></div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="sidebar-option">
+                    </div>
+                </div>
+
+                <div class="col-lg-8">
+                    <div style="display: flex; flex-flow: row wrap;" data-zone-mob-list></div>
+                </div>
+            </div>
+        </div>
+    </section>
+{{end}}

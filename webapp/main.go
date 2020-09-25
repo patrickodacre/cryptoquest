@@ -69,5 +69,13 @@ func main() {
 		tpls.ExecuteTemplate(w, "base.gohtml", zoneID)
 	})
 
+	r.Get("/adventure/{zoneID}", func(w http.ResponseWriter, r *http.Request) {
+		zoneID := chi.URLParam(r, "zoneID")
+
+		tpls := template.Must(template.ParseFiles("./templates/adventure/zone.gohtml", "./templates/layouts/base.gohtml"))
+
+		tpls.ExecuteTemplate(w, "base.gohtml", zoneID)
+	})
+
 	http.ListenAndServe(":8080", r)
 }
