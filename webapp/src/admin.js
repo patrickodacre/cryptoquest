@@ -2,6 +2,153 @@ export default ({characters, mobs, zones}, user) => {
 
     doZoneThings()
 
+    doMobThings()
+
+    function doMobThings() {
+        loadMobs()
+
+        let mobData = {}
+        let selectedMob = null
+
+        const saveMobBtn = document.querySelector('[data-save-mob]')
+        const clearMobBtn = document.querySelector('[data-clear-mob]')
+        const heading = document.querySelector('[data-mob-form-heading]')
+        let isEditingMob = false
+
+
+        // listen for a clear form request:
+        {
+            clearMobBtn.addEventListener('click', evt => {
+                isEditingMob = false
+                selectedMob = null
+                heading.innerHTML = "Create a Mob"
+
+                const {name,description,message} = getFormFields()
+                // these would have been disabled when the edit is initialized
+                name.value = ""
+                description.value = ""
+                message.innerHTML = ""
+            })
+        }
+
+        // create / edit mob types
+        // These are more like mob templates;
+        // Levels are used for Zone Mobs which
+        // are created based on these mob types added.
+        {
+            saveMobBtn.addEventListener('click', evt => {
+                const {name,description,message} = getFormFields()
+
+                // EDIT existing mob
+                if (isEditingMob && selectedMob && typeof selectedMob.id !== "undefined") {
+
+                    mobs.methods
+                        .editMob(selectedMob.id, name.value, description.value)
+                        .send({from: user.hash, gas: 6721975, gasPrice: "20000000000"})
+                        .on('receipt', function (resp) {
+                            // these would have been disabled when the edit is initialized
+                            message.innerHTML = ""
+                            loadMobs()
+                        })
+                        .on('error', function (err) {
+                            alert(err.message)
+                            message.innerHTML = err.message
+                            debugger
+                        })
+
+                    return
+                }
+
+                // create a new mob type
+                mobs.methods
+                    .createMob(name.value, description.value)
+                    .send({from: user.accountNumber(), gas: 6721975, gasPrice: "20000000000"})
+                    .on('receipt', function (resp) {
+                        loadMobs()
+                    })
+                    .on('error', function (err) {
+                        alert(err.message)
+                        debugger
+                    })
+            })
+        }
+
+        function loadMobs() {
+            const mobList = document.querySelector('[data-mob-list]')
+            mobList.innerHTML = ""
+
+            mobs.methods.getMobCount().call().then(count => {
+                count = parseInt(count)
+
+                let promises = []
+
+                for (let i = 0; i < count; i++) {
+                    promises.push(mobs.methods.mobs(i).call().then(resp => ({...resp, ...{id: i}})))
+                }
+
+                Promise.all(promises).then((results) => {
+
+                    // create the HTML to build the list of mobs
+                    results.forEach(m => {
+                        const image = getRandomThumbnail()
+                        mobData[m.id] = m
+
+                        const mob = `
+                            <div class="trending-item mb-3">
+                                <div class="ti-pic">
+                                    <img src="${image}" alt="" style="max-width:80px; max-height:80px;">
+                                </div>
+                                <div class="ti-text">
+                                    <h6><a>${m.name}</a></h6>
+                                    <p>${m.description}
+                                        <br/>
+                                        <button
+                                            class="btn btn-primary"
+                                            data-edit-mob
+                                            data-mob-id="${m.id}"
+                                        >Edit</button>
+                                    </p>
+                                </div>
+                            </div>
+
+                            `
+                        mobList.innerHTML += mob
+                    })
+
+                    // add event listeners to each EDIT button
+                    {
+                        const editMobButtons = document.querySelectorAll('[data-edit-mob]')
+
+                        editMobButtons.forEach(btn => {
+                            btn.addEventListener('click', evt => {
+                                isEditingMob = true
+
+                                const mobID = evt.currentTarget.getAttribute("data-mob-id")
+                                const m = mobData[mobID]
+                                selectedMob = m
+
+                                const {name,description,message} = getFormFields()
+
+                                heading.innerHTML = "Editing Mob " + mobID
+                                name.value = m.name
+                                description.value = m.description
+                                message.innerHTML = ""
+                            })
+                        })
+                    }
+                })
+            })
+        }
+
+        function getFormFields() {
+            const name = document.querySelector('[data-mob-name]')
+            const description = document.querySelector('[data-mob-description]')
+            const message = document.querySelector('[data-mob-form-messages]')
+
+            return {name, description, message}
+        }
+    }
+
     function doZoneThings() {
         loadZones()
 

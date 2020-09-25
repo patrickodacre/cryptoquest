@@ -71,6 +71,63 @@
     </section>
     <!-- Update News Section End -->
 
+
+
+    <!-- mobs -->
+    <section class="update-news-section">
+        <div class="container">
+            <div class="row">
+                <!-- left column -->
+                <div class="col-lg-8">
+                    <div class="hardware-guides">
+                        <div class="section-title">
+                            <h5><span>Manage Mobs</span></h5>
+                        </div>
+                        <div data-mob-list></div>
+                    </div>
+                </div>
+                <!-- create mob form -->
+                <div class="col-lg-4">
+                    <div class="sidebar-option">
+                        <div id="createZoneForm" class="social-media">
+                            <div class="section-title">
+                                <h5 data-mob-form-heading>Create a Mob</h5>
+                            </div>
+                            <ul>
+                                <input type="hidden" data-edit-mob-id></input>
+                                <li>
+                                    <div class="sm-icon">Name</div>
+                                    <div class="inputWrapper">
+                                        <input
+                                            data-mob-name
+                                            name="" type="text" value=""/>
+                                    </div>
+                                </li>
+
+                                <li>
+                                    <div class="sm-icon">Description</div>
+                                    <div style="inputWrapper">
+                                        <input
+                                            data-mob-description
+                                            name="" type="text" value=""/>
+                                    </div>
+                                </li>
+                            </ul>
+                            <div data-mob-form-messages></div>
+                            <div class="createZoneForm__saveButton">
+                                <button data-clear-mob class="btn primary-btn btn-sm">Clear</button>
+                                <button data-save-mob class="btn primary-btn btn-sm">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- end create mob form -->
+            </div><!-- end row -->
+        </div><!-- end container -->
+    </section>
+    <!-- Update News Section End -->
+
+
+
 {{end}}
 {{define "scripts"}}
 {{end}}

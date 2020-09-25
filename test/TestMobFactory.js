@@ -32,6 +32,19 @@ describe("Mob Factory", () => {
         })
     })
 
+    describe("editMob", () => {
+        it("should update mob name, description", async() => {
+            await contract.createMob("MobOne", "Scary")
+
+            await contract.editMob(0, "MobOneEdited", "Really scary!")
+
+            const mob = await contract.mobs(0)
+
+            assert.equal(mob.name, "MobOneEdited")
+            assert.equal(mob.description, "Really scary!")
+        })
+    })
+
     describe("getMobs", () => {
         it("should return all available mobs", async () => {
             await contract.createMob("Orc", "A terrible orc.")

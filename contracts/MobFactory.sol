@@ -30,6 +30,13 @@ contract MobFactory is Ownable {
         emit NewMob(mobs.length -1, _name, _description);
     }
 
+    function editMob(uint mobID, string memory _name, string memory _description) public onlyOwner {
+        Mob storage m = mobs[mobID];
+
+        m.name = _name;
+        m.description = _description;
+    }
+
     function getMobCount() public view returns (uint) {
         return mobs.length;
     }
