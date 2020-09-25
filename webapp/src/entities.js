@@ -1,9 +1,33 @@
 import media from "./media"
 
 export default {
+    characters,
     zone,
     zoneMobs,
     mobTypes,
+}
+
+function characters(characters) {
+    return characters.methods.getOwnerCharacters().call().then(ids => {
+
+        const promises = []
+
+        ids.forEach(id => {
+            promises.push(characters.methods.characters(id).call()
+                .then(char => ({
+                    id: parseInt(id),
+                    firstname: char.firstname,
+                    surname: char.surname,
+                    name: (char.firstname + " " + char.surname).trim(),
+                    bio: char.bio,
+                    remainingxp: parseInt(char.remainingxp),
+                    level: parseInt(char.level),
+                }))
+            )
+        })
+
+        return Promise.all(promises)
+    })
 }
 
 function zone(zones, zoneID) {
