@@ -1,3 +1,4 @@
+import entities from "./entities"
 import media from "./media"
 
 export default ({characters, mobs, zones}, user) => {
@@ -22,7 +23,20 @@ export default ({characters, mobs, zones}, user) => {
             levelmax: parseInt(zoneDetails.levelmax),
         }
 
-        document.querySelector('[data-page-title]').innerHTML = `<h1 class="page-title">Manage ${zone.name}</h1>`
+        document.querySelector('[data-page-title]')
+            .innerHTML = `
+                <div>
+                    <h1 class="page-title">Manage ${zone.name} - Levels ${zone.levelmin} - ${zone.levelmax}</h1>
+                </div>
+            `
+
+        document.querySelector('[data-zone-description]')
+            .innerHTML = `
+                <p>
+                    ${zone.description}
+                </p>
+            `
+
 
         // wire up save 
         {
@@ -61,90 +75,61 @@ export default ({characters, mobs, zones}, user) => {
 
     function loadMobTypeOptions() {
 
-        return mobs.methods.getMobCount().call().then(count => {
-            count = parseInt(count)
-
-            let mobRequests = []
-
-            for (let i = 0; i < count; i++) {
-                mobRequests.push(
-                    mobs.methods.mobs(i).call().then(mob => ({...mob, ...{id: i}}))
-                )
-            }
+        return entities.mobTypes(mobs).then(mobs => {
 
             // provide list of mob types for the form
             // then prepare the rest of the form
-            return Promise.all(mobRequests).then(mobs => {
+            // list of mob types:
+            const selectOptions = document.querySelector('[data-mob-type-options]')
+            mobs.forEach(mob => {
 
-                // list of mob types:
-                const selectOptions = document.querySelector('[data-mob-type-options]')
-                mobs.forEach(mob => {
+                mobTypes.push(mob)
 
-                    mobTypes.push(mob)
-
-                    selectOptions.innerHTML += `
-                        <option value="${mob.name}">${mob.name}</option>
-                    `
-                })
-
-                selectOptions.value = selectOptions[0].value
-
+                selectOptions.innerHTML += `
+                    <option value="${mob.name}">${mob.name}</option>
+                `
             })
+
+            selectOptions.value = selectOptions[0].value
+
         })
     }
 
     function loadZoneMobs() {
+        return entities.zoneMobs(zones, zoneID).then(zoneMobs => {
+            const list = document.querySelector('[data-zone-mob-list]')
+            list.innerHTML = ""
 
-        return zones.methods.getZoneMobCount(zoneID).call().then(count => {
+            zoneMobs.forEach(m => {
 
-            count = parseInt(count)
+                const image = media.getRandomThumbnail()
+                zoneMobData[m.id] = m
 
-            let zoneMobRequests = []
-
-            if (count != 0) {
-                for (let i = 0; i < count; i++) {
-                    zoneMobRequests.push(
-                        zones.methods.getZoneMob(zoneID, i).call().then(mob => ({...mob, ...{id: i}}))
-                    )
-                }
-            }
-
-            // show zone mobs
-            Promise.all(zoneMobRequests).then(zoneMobs => {
-                const list = document.querySelector('[data-zone-mob-list]')
-                list.innerHTML = ""
-
-                zoneMobs.forEach(m => {
-
-                    const image = media.getRandomThumbnail()
-                    zoneMobData[m.id] = m
-
-                    const zMob = `
-                        <div class="trending-item mb-3">
-                            <div class="ti-pic">
-                                <img src="${image}" alt="" style="max-width:80px; max-height:80px;">
-                            </div>
-                            <div class="ti-text">
-                                <h6><a>${m.name}</a></h6>
-                                <p>${m.description}
-                                    <br/>
-                                    <strong>Level: ${m.level}</strong>
-                                    <br/>
-                                    <button
-                                        class="btn btn-primary"
-                                        data-edit-zone-mob
-                                        data-zone-mob-id="${m.id}"
-                                    >Delete</button>
-                                </p>
-                            </div>
+                const zMob = `
+                    <div class="trending-item mb-3">
+                        <div class="ti-pic">
+                            <img src="${image}" alt="" style="max-width:80px; max-height:80px;">
                         </div>
+                        <div class="ti-text">
+                            <h6><a>${m.name}</a></h6>
+                            <p>${m.description}
+                                <br/>
+                                <strong>Level: ${m.level}</strong>
+                                <br/>
+                                <button
+                                    class="btn btn-primary"
+                                    data-edit-zone-mob
+                                    data-zone-mob-id="${m.id}"
+                                >Delete</button>
+                            </p>
+                        </div>
+                    </div>
 
-                        `
-                    list.innerHTML += zMob
-                })
+                    `
+                list.innerHTML += zMob
             })
-        })
 
+        })
     }
 
     function getFormFields() {
