@@ -110,12 +110,25 @@ export default ({characters, mobs, zones}, user) => {
                                 <h6><a>${c.name}</a></h6>
                                 <p>${c.bio}
                                     <br/>
-                                    <button
-                                        class="btn btn-primary"
+                                </p>
+                                <div>
+                                    <a
+                                        href=""
+                                        style="color: white;"
+                                        class=""
                                         data-edit-character
                                         data-character-id="${c.id}"
-                                    >Edit</button>
-                                </p>
+                                    >Edit</a>
+                                </div>
+
+                            </div>
+                            <div>
+                                <button
+                                    style="width:100%;"
+                                    class="btn btn-success"
+                                    data-select-character
+                                    data-character-id="${c.id}"
+                                >Select</button>
                             </div>
                         </div>
 
@@ -125,12 +138,31 @@ export default ({characters, mobs, zones}, user) => {
                 })
             }
 
+            // add event listeners to each SELECT button
+            {
+                const selectCharBtns = document.querySelectorAll('[data-select-character]')
+
+                selectCharBtns.forEach(btn => {
+                    btn.addEventListener('click', evt => {
+                        evt.preventDefault()
+                        evt.stopPropagation()
+
+                        const charID = evt.currentTarget.getAttribute("data-character-id")
+                        const m = characterData[charID]
+
+                        user.selectCharacter(m)
+                    })
+                })
+            }
+
             // add event listeners to each EDIT button
             {
                 const editCharBtns = document.querySelectorAll('[data-edit-character]')
 
                 editCharBtns.forEach(btn => {
                     btn.addEventListener('click', evt => {
+                        evt.preventDefault()
+                        evt.stopPropagation()
                         isEditing = true
 
                         const charID = evt.currentTarget.getAttribute("data-character-id")
