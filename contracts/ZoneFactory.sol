@@ -65,7 +65,7 @@ contract ZoneFactory is Ownable {
         }
     }
 
-    function createZoneMob(uint zoneID, uint templateMobID, uint levelmin, uint levelmax) public returns (uint) {
+    function createZoneMob(uint zoneID, uint templateMobID, uint levelmin, uint levelmax) public onlyOwner {
 
         (string memory name, string memory description) = mobFactory.getMob(templateMobID);
 
@@ -74,8 +74,6 @@ contract ZoneFactory is Ownable {
         rand = levelmin + rand;
 
         zoneMobs[zoneID].push(ZoneMob(name, description, rand));
-
-        return zoneMobs[zoneID].length -1;
     }
 
     function getZoneMobCount(uint zoneID) public view returns (uint) {

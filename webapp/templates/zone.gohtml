@@ -1,0 +1,39 @@
+{{define "content"}}
+    <div dapp-module="zone" data-zone-id="{{.}}"></div>
+
+    <section class="update-news-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div data-page-title=""></div>
+                    <div data-zone-mob-list></div>
+                </div>
+
+                <!-- create zone form -->
+                <div class="col-lg-4">
+                    <div class="sidebar-option">
+                        <div id="createZoneForm" class="social-media">
+                            <div class="section-title">
+                                <h5 data-zone-mob-form-heading>Create a Zone Mob</h5>
+                            </div>
+                            <ul>
+                                <input type="hidden" data-edit-zone-mob-id></input>
+                                <li>
+                                    <div class="sm-icon">Type</div>
+                                    <div class="inputWrapper">
+                                        <select data-mob-type-options>
+                                        </select>
+                                    </div>
+                                </li>
+                            </ul>
+                            <div data-zone-mob-form-messages></div>
+                            <div class="createZoneForm__saveButton">
+                                <button data-save-zone-mob class="btn primary-btn btn-sm">Create</button>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- end create zone form -->
+            </div>
+        </div>
+    </section>
+{{end}}

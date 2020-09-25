@@ -1,5 +1,17 @@
 @import "./_styles.scss";
 
+.page-title {
+    color: #ffffff;
+    font-size: 25px;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-style: italic;
+    padding-left: 16px;
+    position: relative;
+    border-bottom: 1px solid white;
+    letter-spacing: 1px;
+}
+
 #mainMenu {
     .nav-menu {
         text-align: right;
