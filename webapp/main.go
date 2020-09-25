@@ -64,7 +64,7 @@ func main() {
 	r.Get("/admin/zones/{zoneID}", func(w http.ResponseWriter, r *http.Request) {
 		zoneID := chi.URLParam(r, "zoneID")
 
-		tpls := template.Must(template.ParseFiles("./templates/zone.gohtml", "./templates/layouts/base.gohtml"))
+		tpls := template.Must(template.ParseFiles("./templates/admin/zone.gohtml", "./templates/layouts/base.gohtml"))
 
 		tpls.ExecuteTemplate(w, "base.gohtml", zoneID)
 	})
